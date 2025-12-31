@@ -1,8 +1,15 @@
 -- LSP Configuration for Neovim 0.11+ (New API)
 -- ============================================
 
+-- Verificar que cmp_nvim_lsp está disponible
+local cmp_nvim_lsp_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+if not cmp_nvim_lsp_ok then
+    vim.notify("cmp_nvim_lsp no está disponible", vim.log.levels.WARN)
+    return
+end
+
 -- Configurar capacidades para autocompletado
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = cmp_nvim_lsp.default_capabilities()
 
 -- Configuración global para todos los LSP
 local on_attach = function(client, bufnr)
@@ -43,13 +50,15 @@ local on_attach = function(client, bufnr)
     -- Enable omnifunc para completado
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
     
-    -- Formateo automático al guardar
-    vim.api.nvim_create_autocmd('BufWritePre', {
-        buffer = bufnr,
-        callback = function()
-            vim.lsp.buf.format({ async = false })
-        end
-    })
+    -- Formateo automático al guardar (solo si el cliente soporta formateo)
+    if client.supports_method("textDocument/formatting") then
+        vim.api.nvim_create_autocmd('BufWritePre', {
+            buffer = bufnr,
+            callback = function()
+                vim.lsp.buf.format({ async = false })
+            end
+        })
+    end
 end
 
 -- Necesitamos cargar schemastore para JSON
@@ -72,7 +81,6 @@ local common_config = {
 local server_filetypes = {
     lua_ls = { 'lua' },
     tsserver = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-    typescript = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
     pyright = { 'python' },
     bashls = { 'sh', 'bash' },
     jsonls = { 'json' },
@@ -143,7 +151,7 @@ setup_lsp_server('lua_ls', {
     },
 })
 
--- TypeScript
+-- TypeScript (tsserver)
 setup_lsp_server('tsserver', {})
 
 -- Python

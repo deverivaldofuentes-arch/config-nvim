@@ -42,6 +42,7 @@ M.setup = function()
     })
 end
 
+-- Auto-ejecutar setup
 M.setup()
 
 return M

@@ -1,7 +1,11 @@
 -- LuaSnip Configuration
 -- =====================
 
-local ls = require('luasnip')
+local ls_ok, ls = pcall(require, 'luasnip')
+if not ls_ok then
+    vim.notify("LuaSnip no está disponible", vim.log.levels.WARN)
+    return
+end
 
 -- Configuración básica
 ls.config.set_config({

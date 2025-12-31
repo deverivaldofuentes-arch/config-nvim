@@ -47,31 +47,6 @@ autocmd('FileType', {
     end,
 })
 
--- Auto-guardado (opcional, descomenta si lo quieres)
--- autocmd({ 'InsertLeave', 'TextChanged' }, {
---     group = general_group,
---     pattern = '*',
---     callback = function()
---         if vim.bo.modified and not vim.bo.readonly then
---             vim.cmd('silent write')
---         end
---     end,
--- })
-
--- Grupo para LSP
-local lsp_group = augroup('LSP', { clear = true })
-
--- Formateo automático (se activará cuando cargue LSP)
-autocmd('BufWritePre', {
-    group = lsp_group,
-    callback = function(args)
-        local clients = vim.lsp.get_active_clients({ bufnr = args.buf })
-        if #clients > 0 then
-            vim.lsp.buf.format({ async = false })
-        end
-    end,
-})
-
 -- Grupo para Java específico
 local java_group = augroup('JavaSettings', { clear = true })
 

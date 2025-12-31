@@ -1,23 +1,13 @@
 -- Neovim 0.11+ Configuration
 -- ==========================
 
--- Silenciar advertencia de deprecación de nvim-lspconfig
+-- Silenciar advertencias
 vim.g.lspconfig_silent = true
 
--- Cargar configuración base primero
+-- 1. Cargar configuración base
 require('core.options')
 require('core.keymaps')
 require('core.autocmds')
 
--- Cargar gestor de plugins
+-- 2. Cargar gestor de plugins y configuraciones
 require('plugins.setup')
-
--- Cargar configuraciones específicas de plugins
-require('plugins.config.mason')
-require('plugins.config.lsp')
-require('plugins.config.cmp')
-require('plugins.config.luasnip')
-require('plugins.config.jdtls')
-
--- Configuraciones específicas de lenguajes
-require('lang.java')

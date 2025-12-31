@@ -1,7 +1,13 @@
 -- Java Development Tools Language Server (JDTLS) Configuration
 -- =============================================================
 
-local jdtls = require('jdtls')
+-- Verificar que jdtls está disponible
+local jdtls_ok, jdtls = pcall(require, 'jdtls')
+if not jdtls_ok then
+    vim.notify("JDTLS no está disponible. Instala con :MasonInstall jdtls", vim.log.levels.WARN)
+    return
+end
+
 local home = os.getenv('HOME')
 local workspace_path = home .. '/.local/share/nvim/jdtls-workspace/'
 
@@ -52,12 +58,12 @@ local function setup_jdtls()
                     runtimes = {
                         {
                             name = 'JavaSE-17',
-                            path = java_path, -- Usar la ruta específica
+                            path = java_path,
                             default = true,
                         },
                     },
                 },
-                home = java_path, -- Usar la ruta específica
+                home = java_path,
                 
                 -- Maven
                 maven = {
@@ -111,15 +117,6 @@ local function setup_jdtls()
                 implementationsCodeLens = {
                     enabled = true,
                 },
-                
-                -- Formatting (opcional, puedes comentar si no quieres formato específico)
-                -- format = {
-                --     enabled = true,
-                --     settings = {
-                --         url = vim.fn.stdpath('config') .. '/formatters/eclipse-java-google-style.xml',
-                --         profile = 'GoogleStyle',
-                --     },
-                -- },
             },
         },
         
@@ -132,7 +129,7 @@ local function setup_jdtls()
         
         on_attach = function(client, bufnr)
             -- Funcionalidades específicas de jdtls
-            require('jdtls').setup_dap({ hotcodereplace = 'auto' })
+            jdtls.setup_dap({ hotcodereplace = 'auto' })
             require('jdtls.setup').add_commands()
             
             -- Mappings específicos para Java
@@ -159,7 +156,7 @@ local function setup_jdtls()
     }
     
     -- Iniciar el cliente jdtls
-    require('jdtls').start_or_attach(config)
+    jdtls.start_or_attach(config)
     
     -- Configurar formato con jdtls
     vim.api.nvim_create_autocmd('BufWritePre', {

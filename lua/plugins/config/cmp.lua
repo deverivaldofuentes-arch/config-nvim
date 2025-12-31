@@ -1,8 +1,17 @@
 -- Autocompletion (nvim-cmp) Configuration
 -- =======================================
 
-local cmp = require('cmp')
-local luasnip = require('luasnip')
+local cmp_ok, cmp = pcall(require, 'cmp')
+if not cmp_ok then
+    vim.notify("nvim-cmp no está disponible", vim.log.levels.WARN)
+    return
+end
+
+local luasnip_ok, luasnip = pcall(require, 'luasnip')
+if not luasnip_ok then
+    vim.notify("LuaSnip no está disponible", vim.log.levels.WARN)
+    return
+end
 
 -- Cargar snippets amigables
 require('luasnip.loaders.from_vscode').lazy_load()
